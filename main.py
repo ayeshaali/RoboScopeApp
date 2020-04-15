@@ -9,7 +9,6 @@ def home():
     return '''<!DOCTYPE html>
     <html>
     <body>
-      <h1>Lamp Control</h1>
       <form action="/LED" method="post">
         <button type="submit" name="submitButton" value="Toggle">Toggle LED</button>
       </form>
@@ -22,7 +21,6 @@ def change():
     return '''<!DOCTYPE html>
     <html>
     <body>
-      <h1>Lamp Control</h1>
       <form action="/LED" method="post">
         <button type="submit" name="submitButton" value="Toggle">Toggle LED</button>
       </form>
