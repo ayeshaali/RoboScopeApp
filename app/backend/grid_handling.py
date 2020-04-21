@@ -27,4 +27,5 @@ def toggleactive(id):
     c.execute('''UPDATE squares set active=(?) where id=(?)''', (active,id));
     conn.commit()
     conn.close()
+    return active
     

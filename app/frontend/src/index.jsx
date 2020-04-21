@@ -1,9 +1,9 @@
 import * as serviceWorker from './serviceWorker';
+import App from './App';
 
 const React = require('react');
 const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
-const App = require('./App'); 
 const css_index = require('./index.css');
 
 ReactDOM.render(
