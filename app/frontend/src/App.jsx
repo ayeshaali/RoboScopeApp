@@ -1,11 +1,11 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Grid = require('./Grid.jsx');
-const useEffect = React.useEffect;
-const useState = React.useState;
+const ControlPanel = require('./ControlPanel.jsx')
+const useEffect = require('react')['useEffect'];
+const useState = require('react')['useState'];
 const css = require('./App.css');
-const io = require('socket.io-client');
-const socket = io("http://127.0.0.1:5000");
+const socket = require('socket.io-client')("http://127.0.0.1:5000");
 
 const App = (props) => {
   const [value, setValue] = useState(window.token);
@@ -28,6 +28,7 @@ const App = (props) => {
         <p>Welcome</p>
       </header>
       <Grid data={value}/>
+      <ControlPanel/>
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import * as serviceWorker from './serviceWorker';
-import App from './App';
-
+const App = require('./App.jsx').default;
 const React = require('react');
 const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');

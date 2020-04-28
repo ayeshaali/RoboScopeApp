@@ -1,20 +1,24 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const GridSquare = require('./GridSquare');
+const Module = require('./Module');
 const css = require('./App.css');
+const useState = React.useState;
+
 
 const Grid = (props) => { 
   let array = props.data.split(')(');
+  let mod_array = []
+  for (var i=0; i<array.length; i+=8) {
+    mod_array.push(array.slice(i,i+8));
+  }
   
-  
-  const gridsquares = array.map((square) => {
-      let square_arr = square.split(",");
-      return (<GridSquare properties={square_arr} />);
+  const modules = mod_array.map((mod) => {
+      return (<Module properties={mod} />);
   });
 
   return (
     <div className="grid-container">
-      {gridsquares}
+      {modules}
     </div>
   );
 }

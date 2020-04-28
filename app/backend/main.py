@@ -29,7 +29,7 @@ def background_read():
             grid_handling.toggleactive(1)
             token = grid_handling.get_grid()
             socketio.emit('message', {'data': token})
-        time.sleep(4)
+        time.sleep(0.5)
 
 @app.route("/")
 def my_index():
