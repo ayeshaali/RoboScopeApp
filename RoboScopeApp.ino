@@ -17,6 +17,10 @@ int analog_value; // Holds the analog value
 int value_to_write; // Holds the value that we want to write
 int wait_for_transmission = 5; // Delay in ms in order to receive the serial data
 
+const uint32_t red = 0; //hardware pwm channel used in secon part
+const uint32_t green = 1;
+const uint32_t blue = 2;
+
 void set_pin_mode(int pin_number, char mode) {
   switch (mode) {
     case 'I':
@@ -53,12 +57,13 @@ void digital_write(int pin_number, int digital_value) {
 
 void analog_write(int pin_number, int analog_value) {
   analogWrite(pin_number, analog_value);
+  Serial.println(pin_number);
+  Serial.println(analog_value);
 }
 
 void setup() {
   Serial.begin(9600); // Serial Port at 9600 baud
   Serial.setTimeout(100); // Instead of the default 1000ms, in order
-  // to speed up the Serial.parseInt()
 }
 
 void loop() {

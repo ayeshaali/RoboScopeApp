@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Grid = require('./Grid.jsx');
-const ControlPanel = require('./ControlPanel.jsx')
+const ControlPanel = require('./ControlPanel.jsx').default;
 const useEffect = require('react')['useEffect'];
 const useState = require('react')['useState'];
 const css = require('./App.css');
@@ -27,8 +27,10 @@ const App = (props) => {
       <header className="App-header">
         <p>Welcome</p>
       </header>
+      <div className="app-container">
       <Grid data={value}/>
-      <ControlPanel/>
+      <ControlPanel data={value}/>
+      </div>
     </div>
   );
 }

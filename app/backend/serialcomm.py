@@ -42,7 +42,7 @@ class Arduino():
     def analog_write(self, pin_number, analog_value):
         command = (''.join(('WA', str(pin_number), ':',
             str(analog_value)))).encode()
-        self.conn.write(command) 
+        self.conn.write(command)  
 
     def close(self):
         """
