@@ -10,11 +10,12 @@ app = flask.Flask("__main__")
 socketio = SocketIO(app)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-thread = None
+thread = None #hold background thread to read from arduino pins
 
-a = Arduino() 
+a = Arduino()  #create arduino
 time.sleep(3)
 
+#current arduino system: two buttons (pins 12, 13), one RGB LED (pins 9,10,11), one LED (pin 3)
 LED_PIN = 3
 BUTTON_PIN = 13
 BUTTON_PIN2 = 12
@@ -31,42 +32,57 @@ a.set_pin_mode(BLUE,'O')
 def background_read():
     counter = 0
     while True:
-        val = a.digital_read(BUTTON_PIN)
+        # read from both buttons
+        val = a.digital_read(BUTTON_PIN) 
         val2 = a.digital_read(BUTTON_PIN2)
-        if val2 == 0:
+        if val2 == 0: 
+            #button one for toggling active/inactive status of a square (set to 1)
             grid_handling.toggleactive(1)
             token = grid_handling.get_grid()
-            socketio.emit('message', {'data': token})
-        if val == 0:
+            socketio.emit('message', {'data': token}) #send grid to web app to rerender
+        if val == 0: 
+            #button two for increasing height (increment by 1) of a module (set to 1)
             grid_handling.toggle_module_height(1,1)
             token = grid_handling.get_grid()
-            socketio.emit('message', {'data': token})
+            socketio.emit('message', {'data': token}) #send grid to web app to rerender
         time.sleep(0.5)
 
 @app.route("/")
 def my_index():
+    # start app
     global thread
     if thread is None:
         socketio.start_background_task(target=background_read)
     token = grid_handling.get_grid()
+    print(token)
     return flask.render_template("index.html", token=token)
     
 @app.route("/activetoggle", methods=['POST'])
 def toggle_active():
+    # arguments: id of grid square (id: int)
+    # function: will change active status of square
     print("thread")
     id = flask.request.args.get("id")
+    #grid changes and resultant grid
     active = grid_handling.toggleactive(id)
     token = grid_handling.get_grid()
+    #arduino write
     a.digital_write(LED_PIN, active)
     return flask.render_template("index.html", token=token)
     
 @app.route("/module", methods=['POST'])
 def toggle_mod_color():
+    # arguments: id of module (id: int), color to set module to (color: hex)
+    # function: change color of all squares in module
+    #           light up RGB LED on arduino with request color
     id = int(flask.request.args.get("id"))
     color = flask.request.args.get("color")
-    rgb = tuple(int(color[i:i+2], 16) for i in (0, 2, 4))
+    #RGB conversion
+    rgb = tuple(int(color[i:i+2], 16) for i in (0, 2, 4)) 
+    #grid changes and resultant grid
     grid_handling.toggle_module_color(id,rgb)
     token = grid_handling.get_grid()
+    #arduino write
     a.analog_write(RED, rgb[0])
     a.analog_write(GREEN, rgb[1])
     a.analog_write(BLUE, rgb[2])
@@ -74,14 +90,20 @@ def toggle_mod_color():
 
 @app.route("/activemodule", methods=['POST'])
 def toggle_mod_active():
+    # arguments: id of module (id: int)
+    # function: make all squares active
     id = int(flask.request.args.get("id"))
+    #grid changes and resultant grid
     grid_handling.toggle_module_active(id, True)
     token = grid_handling.get_grid()
     return flask.render_template("index.html", token=token)
 
 @app.route("/inactivemodule", methods=['POST'])
 def toggle_mod_inactive():
+    # arguments: id of module (id: int)
+    # function: make all squares inactive
     id = int(flask.request.args.get("id"))
+    #grid changes and resultant grid
     grid_handling.toggle_module_active(id, False)
     token = grid_handling.get_grid()
     return flask.render_template("index.html", token=token)

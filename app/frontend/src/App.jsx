@@ -8,12 +8,17 @@ const css = require('./App.css');
 const socket = require('socket.io-client')("http://127.0.0.1:5000");
 
 const App = (props) => {
+  // Websocket operations
+  // value holds a string of the grid square values 
   const [value, setValue] = useState(window.token);
   
+  // connect to websocket
   socket.on('connect', function() {
       console.log('Websocket connected!');
   });
   
+  // changes to arduino causes changes in grid, changes are sent over websocket
+  // useEffect allows us to rerender app with new grid everytime new data is sent
   useEffect(() => {
     socket.on('message', function(msg) {
       console.log("arduino");
