@@ -10,19 +10,19 @@ class Teensy():
     def write_heights(self):
         """
         Sends height array from db
-        Internally sends b'H{list} where mode could be:
+        Internally sends b'WH:{list} where mode could be:
         """
         heights = gh.get_all_heights()
-        command = (''.join(('H',str(heights)))).encode()
+        command = (''.join(('WH:',str(heights)))).encode()
         self.conn.write(command)
     
     def write_colors(self):
         """
         Sends color array from db
-        Internally sends b'C{list} where mode could be:
+        Internally sends b'WC:{list} where mode could be:
         """
         colors = gh.get_all_colors()
-        command = (''.join(('C',str(colors)))).encode()
+        command = (''.join(('WC:',str(colors)))).encode()
         self.conn.write(command)
     
     def read_pixels(self):
@@ -30,7 +30,7 @@ class Teensy():
         Performs a read from Serial for urban pixel information and returns the value (1 or 0)
         Internally sends b'RD' over the serial connection
         """
-        command = ('RD').encode()
+        command = ('RP').encode()
         self.conn.write(command)
         line_received = self.conn.readline().decode().strip()
         vals = line_received.split(':')
