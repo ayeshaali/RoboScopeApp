@@ -19,9 +19,9 @@ time.sleep(3)
 LED_PIN = 3
 BUTTON_PIN = 13
 BUTTON_PIN2 = 12
-RED = 9;
-GREEN = 10;
-BLUE = 11;
+RED = 9
+GREEN = 10
+BLUE = 11
 a.set_pin_mode(LED_PIN,'O')
 a.set_pin_mode(BUTTON_PIN,'I')
 a.set_pin_mode(BUTTON_PIN2,'I')
@@ -33,14 +33,15 @@ def background_read():
     counter = 0
     while True:
         # read from both buttons
-        val = a.digital_read(BUTTON_PIN) 
-        val2 = a.digital_read(BUTTON_PIN2)
+        # val = a.digital_read(BUTTON_PIN2) 
+        # if val == 0: 
+        #     #button one for toggling active/inactive status of a square (set to 1)
+        #     grid_handling.toggleactive(1)
+        #     token = grid_handling.get_grid()
+        #     socketio.emit('message', {'data': token}) #send grid to web app to rerender
+
+        val2 = a.digital_read(BUTTON_PIN)
         if val2 == 0: 
-            #button one for toggling active/inactive status of a square (set to 1)
-            grid_handling.toggleactive(1)
-            token = grid_handling.get_grid()
-            socketio.emit('message', {'data': token}) #send grid to web app to rerender
-        if val == 0: 
             #button two for increasing height (increment by 1) of a module (set to 1)
             grid_handling.toggle_module_height(1,1)
             token = grid_handling.get_grid()
