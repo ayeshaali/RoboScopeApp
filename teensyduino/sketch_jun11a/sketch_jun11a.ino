@@ -5,14 +5,22 @@ int digital_value; // Holds the digital value
 int analog_value; // Holds the analog value
 int value_to_write; // Holds the value that we want to write
 int wait_for_transmission = 5; // Delay in ms in order to receive the serial data
-int output_values[100] = {0};
+int size = 96;
 
 void write_heights(int* data) {
-  
+  for (int i=0; i<size; i++) {
+    char buf[20];
+    sprintf(buf, "%d: %d", i, data[i]);
+    Serial.println(buf);
+  }
 }
 
 void write_colors(int* data) {
-  
+  for (int i=0; i<size; i++) {
+    char buf[20];
+    sprintf(buf, "%d: %d", i, data[i]);
+    Serial.println(buf);
+  }
 }
 
 void setup() {
@@ -26,13 +34,17 @@ void loop() {
     operation = Serial.read();
     delay(wait_for_transmission); // If not delayed, second character is not correctly read
     mode = Serial.read();
+    
+    int output_values[size] = {0};
     if (Serial.read() == ':') {
-      char bracket = Serial.read();
-      memset(output_values, 0, sizeof(output_values));
-      for (int i = 0; i < 96; i++) {
-        value_to_write = Serial.parseInt();
-        output_values[i] = value_to_write;
-        Serial.println(value_to_write);
+      if (operation=='S') {
+        size = Serial.parseInt();
+      } else {
+        char bracket = Serial.read();
+        for (int i = 0; i < size; i++) {
+          value_to_write = Serial.parseInt();
+          output_values[i] = value_to_write;
+        }
       }
     }
 
@@ -43,7 +55,7 @@ void loop() {
         } else if (mode == 'C') {
           write_colors(output_values);
         } else {
-          break; // Unexpected mode
+          break; // Unexpebcted mode
         }
         break;
 

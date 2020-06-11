@@ -14,12 +14,12 @@ const rgbToHex = (r, g, b)=> {
 
 const GridSquare = (props) => {
   // determines active status (two classes in App.css: .active or .inactive)
-  let active = parseInt(props.properties[1])==1 ? "active": "inactive";
+  let active = parseInt(props.properties[2])==1 ? "active": "inactive";
   // set hex value for the background color of the grid GridSquare
   //    if active use color, if inactive use default inactive color
   let hex=null;
   if (active=="active") {
-    hex = rgbToHex(parseInt(props.properties[2]),parseInt(props.properties[3]),parseInt(props.properties[4]));
+    hex = rgbToHex(parseInt(props.properties[3]),parseInt(props.properties[4]),parseInt(props.properties[5]));
     console.log(hex);
   }
   return (

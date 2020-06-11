@@ -7,6 +7,14 @@ class Teensy():
         self.conn = serial.Serial(serial_port, baud_rate)
         self.conn.timeout = read_timeout # Timeout for readline()
     
+    def set_size(self, pixel_num):
+        """
+        Sends height array from db
+        Internally sends b'WH:{list} where mode could be:
+        """
+        command = (''.join(('SS:',str(pixel_num)))).encode()
+        self.conn.write(command)
+        
     def write_heights(self):
         """
         Sends height array from db

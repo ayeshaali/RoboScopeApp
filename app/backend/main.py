@@ -2,6 +2,7 @@ import flask
 import time
 import grid_handling
 from serialcomm import * 
+from serial_lib import *
 from threading import Thread
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
@@ -39,7 +40,7 @@ def background_read():
         #     grid_handling.toggleactive(1)
         #     token = grid_handling.get_grid()
         #     socketio.emit('message', {'data': token}) #send grid to web app to rerender
-
+        
         val2 = a.digital_read(BUTTON_PIN)
         if val2 == 0: 
             #button two for increasing height (increment by 1) of a module (set to 1)
@@ -55,7 +56,6 @@ def my_index():
     if thread is None:
         socketio.start_background_task(target=background_read)
     token = grid_handling.get_grid()
-    print(token)
     return flask.render_template("index.html", token=token)
     
 @app.route("/activetoggle", methods=['POST'])
@@ -65,7 +65,7 @@ def toggle_active():
     print("thread")
     id = flask.request.args.get("id")
     #grid changes and resultant grid
-    active = grid_handling.toggleactive(id)
+    active = grid_handling.toggle_active(id)
     token = grid_handling.get_grid()
     #arduino write
     a.digital_write(LED_PIN, active)
