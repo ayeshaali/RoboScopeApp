@@ -64,8 +64,9 @@
     "url-loader": "2.3.0",
     "uws": "^10.148.1",
     "webpack": "4.42.0",
-    "webpack-dev-server": "3.10.3",
+    "webpack-dev-server": "^3.11.0",
     "webpack-manifest-plugin": "2.2.0",
+    "websocket-extensions": "^0.1.4",
     "workbox-webpack-plugin": "4.3.1"
   },
   "scripts": {
