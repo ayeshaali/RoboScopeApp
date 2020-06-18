@@ -7,31 +7,21 @@ class Teensy():
         self.conn = serial.Serial(serial_port, baud_rate)
         self.conn.timeout = read_timeout # Timeout for readline()
     
-    def set_size(self, pixel_num):
+    def write_pixels(self, list):
         """
-        Sends height array from db
-        Internally sends b'WH:{list} where mode could be:
+        Performs a digital read on pin_number and returns the value (1 or 0)
+        Internally sends b'RD{pin_number}' over the serial connection
         """
-        command = (''.join(('SS:',str(pixel_num)))).encode()
-        self.conn.write(command)
-        
-    def write_heights(self):
-        """
-        Sends height array from db
-        Internally sends b'WH:{list} where mode could be:
-        """
-        heights = gh.get_all_heights()
-        command = (''.join(('WH:',str(heights)))).encode()
-        self.conn.write(command)
-    
-    def write_colors(self):
-        """
-        Sends color array from db
-        Internally sends b'WC:{list} where mode could be:
-        """
-        colors = gh.get_all_colors()
-        command = (''.join(('WC:',str(colors)))).encode()
-        self.conn.write(command)
+        val = gh.serial_get(list)
+        self.conn.write("W".encode())
+        self.conn.write(str(len(list)).encode())
+        command=""
+        separator = ','
+        for pixel in val:
+            command+="P"
+            command+=separator.join(pixel)
+        self.conn.write(command.encode()) 
+        self.conn.write("E".encode())
     
     def read_pixels(self):
         """

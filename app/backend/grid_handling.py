@@ -1,6 +1,19 @@
 import sqlite3
 db = 'grid.db'
 
+#computation methods
+def ID_to_board(id):
+    return id
+
+def RGB565(color):
+    val = ("%0.4X" % ((int(color[0] / 255 * 31) << 11) | (int(color[1] / 255 * 63) << 5) | (int(color[2] / 255 * 31))))
+    print(val)
+    output = [int(val[0:2],16), int(val[2:4],16)]
+    return output
+
+def interaction(id):
+    return int('10101010',2)
+    
 #access methods
 def get_grid(): 
     '''
@@ -50,6 +63,22 @@ def get_all_colors():
     conn.commit()
     conn.close()
     return colors
+
+def serial_get(list):   
+    conn = sqlite3.connect(db)
+    c = conn.cursor()
+    
+    to_write = []
+    for id in list:
+        row = c.execute('''SELECT * FROM squares WHERE id=(?);''', (id,)).fetchone()
+        board_id = ID_to_board(id)
+        colors = RGB565(row[3:6])
+        val = [board_id, interaction(id), row[6], colors[0], colors[1]]
+        to_write.append([str(i) for i in val])
+        
+    conn.commit()
+    conn.close()
+    return to_write
     
 #pixel methods
 def toggle_active(id): 
