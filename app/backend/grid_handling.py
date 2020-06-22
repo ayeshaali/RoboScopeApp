@@ -3,11 +3,10 @@ db = 'grid.db'
 
 #computation methods
 def ID_to_board(id):
-    return id
-
+    return [int(id/8), int(id %8)]
+     
 def RGB565(color):
     val = ("%0.4X" % ((int(color[0] / 255 * 31) << 11) | (int(color[1] / 255 * 63) << 5) | (int(color[2] / 255 * 31))))
-    print(val)
     output = [int(val[0:2],16), int(val[2:4],16)]
     return output
 
@@ -73,7 +72,7 @@ def serial_get(list):
         row = c.execute('''SELECT * FROM squares WHERE id=(?);''', (id,)).fetchone()
         board_id = ID_to_board(id)
         colors = RGB565(row[3:6])
-        val = [board_id, interaction(id), row[6], colors[0], colors[1]]
+        val = [board_id[0], board_id[1], interaction(id), row[6], colors[0], colors[1]]
         to_write.append([str(i) for i in val])
         
     conn.commit()

@@ -6,7 +6,7 @@ int analog_value; // Holds the analog value
 int value_to_write; // Holds the value that we want to write
 int wait_for_transmission = 5; // Delay in ms in order to receive the serial data
 
-struct Pixel { byte id; byte inter; byte height; byte color1; byte color2;};
+struct Pixel { byte node; byte local_id; byte inter; byte height; byte color1; byte color2;};
 
 char* bin(unsigned int k) {
   char* buffer = malloc(8 * sizeof(char)); /* any number higher than sizeof(unsigned int)*bits_per_byte(8) */
@@ -17,7 +17,7 @@ char* bin(unsigned int k) {
 void translate_pixels(Pixel buf[], int buf_size) {
   for (int i=0; i<buf_size;i++){
     char str[20];
-    sprintf(str, "%d,%s,%d,%X,%X", buf[i].id,bin(buf[i].inter),buf[i].height,buf[i].color1,buf[i].color2);
+    sprintf(str, "%d,%d,%s,%d,%X,%X", buf[i].node, buf[i].local_id, bin(buf[i].inter),buf[i].height,buf[i].color1,buf[i].color2);
     Serial.println(str);
   }
 }
@@ -39,15 +39,15 @@ void loop() {
     switch (operation) {
       case 'W': // Write operation, e.g. WD3:1, WA8:255
         int buf_size = Serial.parseInt();
-        Pixel buf[buf_size] = {0,0,0,0,0};
+        Pixel buf[buf_size] = {0,0,0,0,0,0};
         
         int j = 0;
         while(Serial.read() !='E') {
           byte temp[5] = {0};
-          for (int i =0; i<5;i++) {
+          for (int i =0; i<6;i++) {
             temp[i] = Serial.parseInt();
           }
-          buf[j] = {temp[0], temp[1], temp[2], temp[3], temp[4]};
+          buf[j] = {temp[0], temp[1], temp[2], temp[3], temp[4], temp[5]};
           j++;
         }
 
