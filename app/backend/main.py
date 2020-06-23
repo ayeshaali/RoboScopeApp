@@ -18,14 +18,11 @@ time.sleep(3)
 def background_read():
     counter = 0
     while True:
-        # read from both buttons
-        # val = a.digital_read(BUTTON_PIN2) 
-        # if val == 0: 
-        #     #button one for toggling active/inactive status of a square (set to 1)
-        #     grid_handling.toggleactive(1)
-        #     token = grid_handling.get_grid()
-        #     socketio.emit('message', {'data': token}) #send grid to web app to rerender
-        time.sleep(0.5)
+        t.read_pixels()
+        time.sleep(1)
+        # grid_handling.toggleactive(1)
+        # token = grid_handling.get_grid()
+        # socketio.emit('message', {'data': token}) #send grid to web app to rerender
 
 @app.route("/")
 def my_index():
@@ -40,7 +37,6 @@ def my_index():
 def toggle_active():
     # arguments: id of grid square (id: int)
     # function: will change active status of square
-    print("thread")
     id = flask.request.args.get("id")
     #grid changes and resultant grid
     active = grid_handling.toggle_active(id)
