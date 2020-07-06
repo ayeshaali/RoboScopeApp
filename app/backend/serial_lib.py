@@ -6,6 +6,8 @@ class Teensy():
             read_timeout=5):
         self.conn = serial.Serial(serial_port, baud_rate)
         self.conn.timeout = read_timeout # Timeout for readline()
+        self.conn.flushInput()
+        self.conn.flushOutput()
     
     def write_pixels(self, list):
         """
@@ -28,12 +30,13 @@ class Teensy():
         Performs a read from Serial for urban pixel information and returns the value (1 or 0)
         Internally sends b'RD' over the serial connection
         """
-        command = ('RP').encode()
-        self.conn.write(command)
         line_received = self.conn.readline().decode().strip()
-        vals = line_received.split(':')
-        if vals[0] == ('D'+ str(pin_number)):
-            return int(vals[1])
+        if line_received:   
+            vals = line_received.split(';')[:-1]
+            for i in range(len(vals)):
+                vals[i] = vals[i].split(',')
+            print(vals)
+            self.conn.flushInput()
             
     def close(self):
         """
